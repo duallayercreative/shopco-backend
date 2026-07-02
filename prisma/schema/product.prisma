@@ -22,3 +22,46 @@ model Product {
     @@index([categoryId])
     @@map("product")
 }
+
+model ProductColor {
+    id       String @id @default(uuid(7))
+    imageUrl String @db.Text
+    color    String @db.VarChar(50)
+
+    productId String
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
+
+    productVariants ProductVariant[]
+
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+    @@unique([color, productId])
+    @@index([productId])
+    @@map("product_color")
+}
+
+model ProductVariant {
+    id    String  @id @default(uuid(7))
+    sku   String  @unique @db.VarChar(100)
+    stock Int     @default(0)
+    price Decimal @db.Decimal(10, 2)
+
+    size ProductSize
+
+    colorId String
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
+
+    orderItems OrderItem[]
+
+    color ProductColor @relation(fields: [colorId], references: [id], onDelete: Cascade)
+
+    @@unique([size, colorId])
+    @@index([colorId])
+    @@map("product_variant")
+}
