@@ -9,3 +9,35 @@ enum UserStatus {
     INACTIVE
     BANNED
 }
+
+enum ProductSize {
+    XS
+    S
+    M
+    L
+    XL
+    XXL
+}
+
+enum OrderStatus {
+    PENDING
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+    RETURNED
+}
+
+enum PaymentStatus {
+    PENDING
+    PAID
+    FAILED
+    REFUNDED
+}
+
+enum PaymentMethod {
+    STRIPE
+    CASH_ON_DELIVERY
+    BKASH
+    NAGAD
+}
