@@ -27,8 +27,6 @@ const registerUser = async (payload: RegisterUser): Promise<Partial<User>> => {
 
     return result.user;
   } catch (error) {
-    console.error("Error in registerUser:", error);
-
     if (error instanceof AppError) throw error;
 
     throw new AppError("Failed to register user", status.INTERNAL_SERVER_ERROR);
