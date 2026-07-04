@@ -2,10 +2,11 @@ import status from "http-status";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
-import { RegisterUser, VerifyEmail } from "./auth.interface.js";
-import { User } from "@prisma/client";
+import { LoginUser, RegisterUser, VerifyEmail } from "./auth.interface.js";
+import { userResponse, UserResponse } from "../../interfaces/user.js";
+import { User, UserStatus } from "@prisma/client";
 
-const registerUser = async (payload: RegisterUser): Promise<void> => {
+const registerUser = async (payload: RegisterUser): Promise<UserResponse> => {
   try {
     const { name, email, password } = payload;
 
@@ -25,7 +26,7 @@ const registerUser = async (payload: RegisterUser): Promise<void> => {
       },
     });
 
-    // return result.user;
+    return userResponse(result.user as User);
   } catch (error) {
     if (error instanceof AppError) throw error;
 
@@ -59,7 +60,48 @@ const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
   }
 };
 
-const loginUser = async () => {};
+const loginUser = async (
+  payload: LoginUser,
+): Promise<{
+  redirect: boolean;
+  token: string;
+  url?: string | undefined;
+  user: UserResponse;
+}> => {
+  try {
+    const { email, password } = payload;
+
+    const isUserExist = await prisma.user.findUnique({
+      where: {
+        email,
+        status: UserStatus.ACTIVE || UserStatus.INACTIVE,
+        deletedAt: null,
+      },
+    });
+
+    if (!isUserExist) {
+      throw new AppError("User not exist with this email", status.NOT_FOUND);
+    }
+
+    const result = await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+      },
+    });
+
+    return {
+      redirect: result.redirect,
+      token: result.token,
+      url: result.url,
+      user: userResponse(result.user as User),
+    };
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to login user", status.INTERNAL_SERVER_ERROR);
+  }
+};
 
 export const authService = {
   registerUser,

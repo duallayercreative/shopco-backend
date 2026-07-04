@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { authService } from "./auth.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
+import { tokenUtils } from "../../utils/token.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerUser(req.body);
@@ -25,7 +26,18 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const loginUser = catchAsync(async (req: Request, res: Response) => {});
+const loginUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await authService.loginUser(req.body);
+
+  tokenUtils.setBetterAuthSessionCookie(res, result.token);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User logged in successfully",
+    data: result,
+  });
+});
 
 export const authController = {
   registerUser,

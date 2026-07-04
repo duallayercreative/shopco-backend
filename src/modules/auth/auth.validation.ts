@@ -24,7 +24,18 @@ const verifyEmail = z.object({
     .max(6, "OTP can't be more than 6 characters long"),
 });
 
+const loginUser = z.object({
+  email: z
+    .email("Invalid email address")
+    .max(255, "Email can't be more than 255 characters long"),
+  password: z
+    .string("Password is required")
+    .min(8, "Password must be at least 8 characters long")
+    .max(50, "Password can't be more than 50 characters long"),
+});
+
 export const AuthValidation = {
   registerUser,
   verifyEmail,
+  loginUser,
 };

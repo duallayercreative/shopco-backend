@@ -17,6 +17,10 @@ router.post(
   authController.verifyEmail,
 );
 
-router.post("/login", authController.loginUser);
+router.post(
+  "/login",
+  validateRequestBody(AuthValidation.loginUser),
+  authController.loginUser,
+);
 
 export { router as authRouter };
