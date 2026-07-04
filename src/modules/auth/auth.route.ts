@@ -11,6 +11,8 @@ router.post(
   authController.registerUser,
 );
 
-// router.post("/login");
+router.post("/verify-email", authController.verifyEmail);
+
+router.post("/login", authController.loginUser);
 
 export { router as authRouter };

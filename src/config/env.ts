@@ -10,6 +10,15 @@ interface Env {
   FRONTEND_URL: string;
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
+  BETTER_AUTH_SESSION_EXPIRES_IN: string;
+  BETTER_AUTH_SESSION_UPDATE_AGE: string;
+  EMAIL_SENDER_SMTP_HOST: string;
+  EMAIL_SENDER_SMTP_PORT: string;
+  EMAIL_SENDER_SMTP_USER: string;
+  EMAIL_SENDER_SMTP_PASS: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_CALLBACK_URL: string;
 }
 
 function loadEnv(): Env {
@@ -20,6 +29,15 @@ function loadEnv(): Env {
     "FRONTEND_URL",
     "BETTER_AUTH_SECRET",
     "BETTER_AUTH_URL",
+    "BETTER_AUTH_SESSION_EXPIRES_IN",
+    "BETTER_AUTH_SESSION_UPDATE_AGE",
+    "EMAIL_SENDER_SMTP_HOST",
+    "EMAIL_SENDER_SMTP_PORT",
+    "EMAIL_SENDER_SMTP_USER",
+    "EMAIL_SENDER_SMTP_PASS",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "GOOGLE_CALLBACK_URL",
   ];
 
   requiredEnvVariables.forEach((envVariable) => {
@@ -37,6 +55,17 @@ function loadEnv(): Env {
     FRONTEND_URL: process.env.FRONTEND_URL as string,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET as string,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL as string,
+    BETTER_AUTH_SESSION_EXPIRES_IN: process.env
+      .BETTER_AUTH_SESSION_EXPIRES_IN as string,
+    BETTER_AUTH_SESSION_UPDATE_AGE: process.env
+      .BETTER_AUTH_SESSION_UPDATE_AGE as string,
+    EMAIL_SENDER_SMTP_HOST: process.env.EMAIL_SENDER_SMTP_HOST as string,
+    EMAIL_SENDER_SMTP_PORT: process.env.EMAIL_SENDER_SMTP_PORT as string,
+    EMAIL_SENDER_SMTP_USER: process.env.EMAIL_SENDER_SMTP_USER as string,
+    EMAIL_SENDER_SMTP_PASS: process.env.EMAIL_SENDER_SMTP_PASS as string,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
+    GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL as string,
   };
 }
 

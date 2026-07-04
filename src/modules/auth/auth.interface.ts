@@ -3,3 +3,8 @@ export interface RegisterUser {
   email: string;
   password: string;
 }
+
+export interface VerifyEmail {
+  email: string;
+  otp: string;
+}
