@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma.js";
 import { LoginUser, RegisterUser, VerifyEmail } from "./auth.interface.js";
 import { userResponse, UserResponse } from "../../interfaces/user.js";
 import { User, UserStatus } from "@prisma/client";
+import { Session } from "better-auth";
 
 const registerUser = async (payload: RegisterUser): Promise<UserResponse> => {
   try {
@@ -103,8 +104,35 @@ const loginUser = async (
   }
 };
 
+const googleLoginSuccess = async (
+  sessionToken: string,
+): Promise<{ session: Session | null; user: User | null }> => {
+  try {
+    const session = await auth.api.getSession({
+      headers: {
+        Cookie: `better-auth.session_token=${sessionToken}`,
+      },
+    });
+
+    if (!session?.session || !session?.user) {
+      return { session: null, user: null };
+    }
+
+    return {
+      session: session.session,
+      user: session.user as User,
+    };
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to google login",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const authService = {
   registerUser,
   verifyEmail,
   loginUser,
+  googleLoginSuccess,
 };

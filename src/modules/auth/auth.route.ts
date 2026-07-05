@@ -23,4 +23,8 @@ router.post(
   authController.loginUser,
 );
 
+router.get("/login/google", authController.googleLogin);
+
+router.get("/google/success", authController.googleLoginSuccess);
+
 export { router as authRouter };
