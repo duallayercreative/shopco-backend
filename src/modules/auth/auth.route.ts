@@ -24,6 +24,7 @@ router.post(
   authController.loginUser,
 );
 
+// http://localhost:5000/api/v1/auth/login/google
 router.get("/login/google", authController.googleLogin);
 
 router.get("/google/success", authController.googleLoginSuccess);

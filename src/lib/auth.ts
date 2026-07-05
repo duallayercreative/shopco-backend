@@ -142,7 +142,7 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
-      date_of_birth: {
+      dateOfBirth: {
         type: "date",
         required: false,
       },
