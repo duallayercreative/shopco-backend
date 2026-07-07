@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { categoryController } from "./category.controller.js";
 import { validateRequestBody } from "../../middlewares/zod-middleware.js";
-import { catergoryValidation } from "./category.validation.js";
+import { categoryValidation } from "./category.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 
@@ -10,11 +10,11 @@ const router: Router = Router();
 router.post(
   "/",
   authMiddleware(UserRole.ADMIN),
-  validateRequestBody(catergoryValidation.createCategory),
+  validateRequestBody(categoryValidation.createCategory),
   categoryController.createCategory,
 );
 
-// router.get("/");
+router.get("/", categoryController.getCategories);
 
 // router.get("/:id");
 

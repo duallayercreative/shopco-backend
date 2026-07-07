@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { categoryService } from "./category.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
+import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 
 const createCategory = catchAsync(async (req: Request, res: Response) => {
   const result = await categoryService.createCategory(req.body);
@@ -15,6 +16,18 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getCategories = catchAsync(async (req: Request, res: Response) => {
+  const result = await categoryService.getCategories(req.query as IQueryParams);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Categories fetched successfully",
+    data: result,
+  });
+});
+
 export const categoryController = {
   createCategory,
+  getCategories,
 };

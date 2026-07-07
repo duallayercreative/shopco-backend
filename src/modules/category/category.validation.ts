@@ -11,6 +11,6 @@ const createCategory = z.object({
     .optional(),
 });
 
-export const catergoryValidation = {
+export const categoryValidation = {
   createCategory,
 };

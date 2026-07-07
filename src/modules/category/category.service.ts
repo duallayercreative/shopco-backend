@@ -2,7 +2,12 @@ import status from "http-status";
 import AppError from "../../errors/app-error.js";
 import { prisma } from "../../lib/prisma.js";
 import { CreateCategory } from "./category.interface.js";
-import { Category } from "@prisma/client";
+import { Category, Prisma } from "@prisma/client";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import {
+  IQueryParams,
+  QueryResult,
+} from "../../interfaces/query-builder.interface.js";
 
 const createCategory = async (payload: CreateCategory): Promise<Category> => {
   try {
@@ -19,7 +24,34 @@ const createCategory = async (payload: CreateCategory): Promise<Category> => {
   }
 };
 
-const getCategories = async () => {};
+const getCategories = async (
+  query: IQueryParams,
+): Promise<QueryResult<Category>> => {
+  try {
+    const queryBuilder = new QueryBuilder<
+      Category,
+      Prisma.CategoryWhereInput,
+      Prisma.CategoryInclude
+    >(prisma.category, query, {});
+
+    const result = await queryBuilder
+      .pagination()
+      .sort()
+      .where({})
+      .search()
+      .filter()
+      .select()
+      .includes({})
+      .execute();
+
+    return result;
+  } catch (error) {
+    throw new AppError(
+      "Failed to fetch categories",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
 
 export const categoryService = {
   createCategory,
