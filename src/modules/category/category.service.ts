@@ -53,7 +53,29 @@ const getCategories = async (
   }
 };
 
+const getCategoryById = async (id: string): Promise<Category | null> => {
+  try {
+    const result = await prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (!result) {
+      throw new AppError("Category not found", status.NOT_FOUND);
+    }
+
+    return result;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError(
+      "Failed to fetch category",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const categoryService = {
   createCategory,
   getCategories,
+  getCategoryById,
 };

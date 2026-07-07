@@ -27,7 +27,21 @@ const getCategories = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getCategoryById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await categoryService.getCategoryById(id as string);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Category fetched successfully",
+    data: result,
+  });
+});
+
 export const categoryController = {
   createCategory,
   getCategories,
+  getCategoryById,
 };
