@@ -5,12 +5,20 @@ const createCategory = z.object({
     .string("Invalid name")
     .min(1, "Name is required")
     .max(255, "Name can't be more than 255 characters long"),
+
   description: z
     .string()
     .max(1000, "Description can't be more than 1000 characters long")
     .optional(),
 });
 
+const updateCategory = createCategory
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field is required to update.",
+  });
+
 export const categoryValidation = {
   createCategory,
+  updateCategory,
 };

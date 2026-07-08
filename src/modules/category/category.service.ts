@@ -1,7 +1,7 @@
 import status from "http-status";
 import AppError from "../../errors/app-error.js";
 import { prisma } from "../../lib/prisma.js";
-import { CreateCategory } from "./category.interface.js";
+import { CreateCategory, UpdateCategory } from "./category.interface.js";
 import { Category, Prisma } from "@prisma/client";
 import { QueryBuilder } from "../../utils/query-builder.js";
 import {
@@ -74,8 +74,38 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
   }
 };
 
+const updateCategoryById = async (
+  id: string,
+  payload: UpdateCategory,
+): Promise<Category> => {
+  try {
+    const isCategoryExist = await prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (!isCategoryExist) {
+      throw new AppError("Category not found", status.NOT_FOUND);
+    }
+
+    const result = await prisma.category.update({
+      where: { id },
+      data: payload,
+    });
+
+    return result;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError(
+      "Failed to update category",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const categoryService = {
   createCategory,
   getCategories,
   getCategoryById,
+  updateCategoryById,
 };

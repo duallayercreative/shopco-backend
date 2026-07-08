@@ -26,7 +26,11 @@ router.get(
   categoryController.getCategoryById,
 );
 
-// router.patch("/:id");
+router.patch(
+  "/:id",
+  validateRequestBody(categoryValidation.updateCategory),
+  categoryController.updateCategoryById,
+);
 
 // router.delete("/:id");
 
