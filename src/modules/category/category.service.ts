@@ -103,9 +103,36 @@ const updateCategoryById = async (
   }
 };
 
+const deleteCategoryById = async (id: string): Promise<void> => {
+  try {
+    const isCategoryExist = await prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (!isCategoryExist) {
+      throw new AppError("Category not found", status.NOT_FOUND);
+    }
+
+    await prisma.category.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError(
+      "Failed to delete category",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const categoryService = {
   createCategory,
   getCategories,
   getCategoryById,
   updateCategoryById,
+  deleteCategoryById,
 };

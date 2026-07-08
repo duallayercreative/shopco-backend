@@ -28,10 +28,15 @@ router.get(
 
 router.patch(
   "/:id",
+  validateRequestParams(paramsIdZodSchema),
   validateRequestBody(categoryValidation.updateCategory),
   categoryController.updateCategoryById,
 );
 
-// router.delete("/:id");
+router.delete(
+  "/:id",
+  validateRequestParams(paramsIdZodSchema),
+  categoryController.deleteCategoryById,
+);
 
 export { router as categoryRouter };
