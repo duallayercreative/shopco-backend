@@ -37,11 +37,15 @@ const getCategories = async (
     const result = await queryBuilder
       .pagination()
       .sort()
-      .where({})
+      .where({
+        deletedAt: null,
+      })
       .search()
       .filter()
       .select()
-      .includes({})
+      .includes({
+        _count: true,
+      })
       .execute();
 
     return result;

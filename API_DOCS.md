@@ -12,6 +12,16 @@
 
 ### User
 
+### Brand
+
+| Method | Endpoint           | Access | Description                      |
+| ------ | ------------------ | ------ | -------------------------------- |
+| POST   | /api/v1/brands     | ADMIN  | create a new brand               |
+| GET    | /api/v1/brands     | PUBLIC | get all brands                   |
+| GET    | /api/v1/brands/:id | PUBLIC | get brand by id                  |
+| PATCH  | /api/v1/brands/:id | ADMIN  | update brand by id               |
+| DELETE | /api/v1/brands/:id | ADMIN  | delete brand by id (soft delete) |
+
 ### Category
 
 | Method | Endpoint               | Access | Description                         |
