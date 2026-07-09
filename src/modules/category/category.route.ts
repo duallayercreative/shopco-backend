@@ -28,6 +28,7 @@ router.get(
 
 router.patch(
   "/:id",
+  authMiddleware(UserRole.ADMIN),
   validateRequestParams(paramsIdZodSchema),
   validateRequestBody(categoryValidation.updateCategory),
   categoryController.updateCategoryById,
@@ -35,6 +36,7 @@ router.patch(
 
 router.delete(
   "/:id",
+  authMiddleware(UserRole.ADMIN),
   validateRequestParams(paramsIdZodSchema),
   categoryController.deleteCategoryById,
 );
