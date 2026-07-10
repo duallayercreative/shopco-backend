@@ -31,3 +31,13 @@
 | GET    | /api/v1/categories/:id | PUBLIC | get category by id                  |
 | PATCH  | /api/v1/categories/:id | ADMIN  | update category by id               |
 | DELETE | /api/v1/categories/:id | ADMIN  | delete category by id (soft delete) |
+
+### Product
+
+| Method | Endpoint             | Access | Description                        |
+| ------ | -------------------- | ------ | ---------------------------------- |
+| POST   | /api/v1/products     | ADMIN  | add a new product                  |
+| GET    | /api/v1/products     | PUBLIC | get all products                   |
+| GET    | /api/v1/products/:id | PUBLIC | get product by id                  |
+| PATCH  | /api/v1/products/:id | ADMIN  | update product by id               |
+| DELETE | /api/v1/products/:id | ADMIN  | delete product by id (soft delete) |
