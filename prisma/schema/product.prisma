@@ -24,9 +24,9 @@ model Product {
 }
 
 model ProductColor {
-    id       String @id @default(uuid(7))
-    imageUrl String @db.Text
-    color    String @db.VarChar(50)
+    id       String  @id @default(uuid(7))
+    imageUrl String? @db.Text
+    color    String  @db.VarChar(50)
 
     productId String
 

@@ -10,7 +10,7 @@
     "start": "node dist/src/server.js",
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
-    "seed": "npx tsx src/seeds/super-admin.ts"
+    "seed": "npx tsx src/seeds/seedAdmin.ts"
   },
   "type": "module",
   "keywords": [],
@@ -37,6 +37,7 @@
     "@prisma/client": "^7.8.0",
     "better-auth": "^1.6.23",
     "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "ejs": "^6.0.1",

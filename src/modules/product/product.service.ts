@@ -4,6 +4,7 @@ import { CreateProduct } from "./product.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Product } from "@prisma/client";
 import { generateUniqueSlug } from "../../utils/generate-slug.js";
+import { generateSku } from "../../utils/generate-sku.js";
 
 const addProduct = async (payload: CreateProduct): Promise<Product> => {
   try {
@@ -19,15 +20,47 @@ const addProduct = async (payload: CreateProduct): Promise<Product> => {
 
     const slug = await generateUniqueSlug(payload.title);
 
-    const result = await prisma.product.create({
-      data: {
-        ...payload,
-        slug,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const product = await tx.product.create({
+        data: {
+          title: payload.title,
+          slug,
+          description: payload.description,
+          discountPercentage: payload.discountPercentage ?? 0,
+          brandId: payload.brandId,
+          categoryId: payload.categoryId,
+        },
+      });
+
+      for (const color of payload.colors) {
+        const createdColor = await tx.productColor.create({
+          data: {
+            color: color.color,
+            imageUrl: color.imageUrl,
+            productId: product.id,
+          },
+        });
+
+        for (const variant of color.variants) {
+          await tx.productVariant.create({
+            data: {
+              sku: generateSku(product.title, color.color, variant.size),
+              size: variant.size,
+              price: variant.price,
+              stock: variant.stock,
+              colorId: createdColor.id,
+            },
+          });
+        }
+      }
+
+      return product;
     });
 
     return result;
   } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError("Failed to add product", status.INTERNAL_SERVER_ERROR);
   }
 };

@@ -4,14 +4,15 @@ import { multerUpload } from "../../config/multer.config.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 import { validateRequestBody } from "../../middlewares/zod-middleware.js";
+import { productValidation } from "./product.validation.js";
 
 const router = Router();
 
 router.post(
   "/",
   authMiddleware(UserRole.ADMIN),
-  multerUpload.single("file"),
-  //   validateRequestBody(),
+  multerUpload.array("images"),
+  validateRequestBody(productValidation.createProduct),
   productController.addProduct,
 );
 
