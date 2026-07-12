@@ -5,7 +5,6 @@ export const generateSku = (
   color: string,
   size: string,
 ): string => {
-  // Premium Oversized T-Shirt -> POT
   const productCode = title
     .trim()
     .split(/\s+/)
@@ -13,7 +12,6 @@ export const generateSku = (
     .join("")
     .slice(0, 5);
 
-  // Black -> BLA
   const colorCode = color
     .trim()
     .replace(/\s+/g, "")

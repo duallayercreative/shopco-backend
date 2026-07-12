@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catch-async.js";
 import { productService } from "./product.service.js";
 import { sendResponse } from "../../utils/send-response.js";
+import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 
 const addProduct = catchAsync(async (req: Request, res: Response) => {
   const files = req.files as Express.Multer.File[];
@@ -24,7 +25,16 @@ const addProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getProducts = catchAsync(async (req: Request, res: Response) => {});
+const getProducts = catchAsync(async (req: Request, res: Response) => {
+  const result = await productService.getProducts(req.query as IQueryParams);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Products fetched successfully",
+    data: result,
+  });
+});
 
 const getProductById = catchAsync(async (req: Request, res: Response) => {});
 

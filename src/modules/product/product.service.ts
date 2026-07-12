@@ -2,9 +2,14 @@ import status from "http-status";
 import AppError from "../../errors/app-error.js";
 import { CreateProduct } from "./product.interface.js";
 import { prisma } from "../../lib/prisma.js";
-import { Product } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { generateUniqueSlug } from "../../utils/generate-slug.js";
 import { generateSku } from "../../utils/generate-sku.js";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import {
+  IQueryParams,
+  QueryResult,
+} from "../../interfaces/query-builder.interface.js";
 
 const addProduct = async (payload: CreateProduct): Promise<Product> => {
   try {
@@ -65,8 +70,31 @@ const addProduct = async (payload: CreateProduct): Promise<Product> => {
   }
 };
 
-const getProducts = async () => {
+const getProducts = async (
+  query: IQueryParams,
+): Promise<QueryResult<Product>> => {
   try {
+    const queryBuilder = new QueryBuilder<
+      Product,
+      Prisma.ProductWhereInput,
+      Prisma.ProductInclude
+    >(prisma.product, query, {});
+
+    const result = await queryBuilder
+      .pagination()
+      .sort()
+      .where({
+        deletedAt: null,
+      })
+      .search()
+      .filter()
+      .select()
+      .includes({
+        _count: true,
+      })
+      .execute();
+
+    return result;
   } catch (error) {
     throw new AppError("Failed to get products", status.INTERNAL_SERVER_ERROR);
   }
