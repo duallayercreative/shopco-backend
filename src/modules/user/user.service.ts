@@ -36,6 +36,50 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
   }
 };
 
+const updateProfile = async (id: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError("User not found", status.NOT_FOUND);
+    }
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError(
+      "Failed to update profile",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
+const deleteUserById = async (id: string): Promise<void> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError("User not found", status.NOT_FOUND);
+    }
+
+    await prisma.user.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to delete user", status.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const userService = {
   getUsers,
+  updateProfile,
+  deleteUserById,
 };

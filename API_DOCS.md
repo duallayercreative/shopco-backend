@@ -12,6 +12,12 @@
 
 ### User
 
+| Method | Endpoint          | Access | Description                      |
+| ------ | ----------------- | ------ | -------------------------------- |
+| GET    | /api/v1/users     | ADMIN  | get all users                    |
+| PATCH  | /api/v1/users     | SECURE | user can update own informations |
+| DELETE | /api/v1/users/:id | ADMIN  | delete user by id (soft delete)  |
+
 ### Brand
 
 | Method | Endpoint           | Access | Description                      |
