@@ -100,14 +100,25 @@ const getProducts = async (
   }
 };
 
-const getProductById = async () => {
+const getProductById = async (id: string): Promise<Product> => {
   try {
+    const product = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!product) {
+      throw new AppError("Product not found", status.NOT_FOUND);
+    }
+
+    return product;
   } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError("Failed to get product", status.INTERNAL_SERVER_ERROR);
   }
 };
 
-const updateProductById = async () => {
+const updateProductById = async (id: string) => {
   try {
   } catch (error) {
     throw new AppError(
@@ -117,9 +128,25 @@ const updateProductById = async () => {
   }
 };
 
-const deleteProductById = async () => {
+const deleteProductById = async (id: string): Promise<void> => {
   try {
+    const product = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!product) {
+      throw new AppError("Product not found", status.NOT_FOUND);
+    }
+
+    await prisma.product.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
   } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError(
       "Failed to delete product",
       status.INTERNAL_SERVER_ERROR,

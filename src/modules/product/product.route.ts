@@ -3,7 +3,11 @@ import { productController } from "./product.controller.js";
 import { multerUpload } from "../../config/multer.config.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
-import { validateRequestBody } from "../../middlewares/zod-middleware.js";
+import {
+  paramsIdZodSchema,
+  validateRequestBody,
+  validateRequestParams,
+} from "../../middlewares/zod-middleware.js";
 import { productValidation } from "./product.validation.js";
 
 const router = Router();
@@ -18,10 +22,24 @@ router.post(
 
 router.get("/", productController.getProducts);
 
-router.get("/:id", productController.getProductById);
+router.get(
+  "/:id",
+  validateRequestParams(paramsIdZodSchema),
+  productController.getProductById,
+);
 
-router.patch("/:id", productController.updateProductById);
+router.patch(
+  "/:id",
+  authMiddleware(UserRole.ADMIN),
+  validateRequestParams(paramsIdZodSchema),
+  productController.updateProductById,
+);
 
-router.delete("/:id", productController.deleteProductById);
+router.delete(
+  "/:id",
+  authMiddleware(UserRole.ADMIN),
+  validateRequestParams(paramsIdZodSchema),
+  productController.deleteProductById,
+);
 
 export { router as productRouter };
