@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { productService } from "./product.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import { IQueryParams } from "../../interfaces/query-builder.interface.js";
+import status from "http-status";
 
 const addProduct = catchAsync(async (req: Request, res: Response) => {
   const files = req.files as Express.Multer.File[];
@@ -18,7 +19,7 @@ const addProduct = catchAsync(async (req: Request, res: Response) => {
   const result = await productService.addProduct(payload);
 
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: status.CREATED,
     success: true,
     message: "Product added successfully",
     data: result,
@@ -29,7 +30,7 @@ const getProducts = catchAsync(async (req: Request, res: Response) => {
   const result = await productService.getProducts(req.query as IQueryParams);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: status.OK,
     success: true,
     message: "Products fetched successfully",
     data: result,
@@ -42,7 +43,7 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
   const result = await productService.getProductById(id as string);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: status.OK,
     success: true,
     message: "Product fetched successfully",
     data: result,
@@ -57,7 +58,7 @@ const deleteProductById = catchAsync(async (req: Request, res: Response) => {
   await productService.deleteProductById(id as string);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: status.OK,
     success: true,
     message: "Product deleted successfully",
   });

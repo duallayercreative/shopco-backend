@@ -47,3 +47,9 @@
 | GET    | /api/v1/products/:id | PUBLIC | get product by id                  |
 | PATCH  | /api/v1/products/:id | ADMIN  | update product by id               |
 | DELETE | /api/v1/products/:id | ADMIN  | delete product by id (soft delete) |
+
+### Cart
+
+| Method | Endpoint      | Access | Description |
+| ------ | ------------- | ------ | ----------- |
+| POST   | /api/v1/carts | SECURE | add to cart |
