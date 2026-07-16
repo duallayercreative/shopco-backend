@@ -50,6 +50,7 @@
 
 ### Cart
 
-| Method | Endpoint      | Access | Description |
-| ------ | ------------- | ------ | ----------- |
-| POST   | /api/v1/carts | SECURE | add to cart |
+| Method | Endpoint      | Access | Description   |
+| ------ | ------------- | ------ | ------------- |
+| POST   | /api/v1/carts | SECURE | add to cart   |
+| GET    | /api/v1/carts | SECURE | get all carts |
