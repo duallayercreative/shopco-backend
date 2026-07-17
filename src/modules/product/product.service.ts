@@ -102,19 +102,34 @@ const getProducts = async (
       .select()
       .includes({
         _count: true,
+        productColors: {
+          include: {
+            _count: true,
+            productVariants: true,
+          },
+        },
       })
       .execute();
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to get products", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
 const getProductById = async (id: string): Promise<Product> => {
   try {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
+      include: {
+        _count: true,
+        productColors: {
+          include: {
+            _count: true,
+            productVariants: true,
+          },
+        },
+      },
     });
 
     if (!product) {
@@ -123,9 +138,7 @@ const getProductById = async (id: string): Promise<Product> => {
 
     return product;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get product", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
