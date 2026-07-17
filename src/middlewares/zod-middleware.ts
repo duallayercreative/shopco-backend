@@ -14,7 +14,7 @@ export const validateRequestBody = (zodObject: z.ZodObject) => {
     const parsedResult = zodObject.safeParse(req.body);
 
     if (!parsedResult.success) {
-      next(parsedResult.error);
+      return next(parsedResult.error);
     }
 
     req.body = parsedResult.data;
@@ -28,7 +28,7 @@ export const validateRequestParams = (zodObject: z.ZodObject) => {
     const parsedResult = zodObject.safeParse(req.params);
 
     if (!parsedResult.success) {
-      next(parsedResult.error);
+      return next(parsedResult.error);
     }
 
     req.params = parsedResult.data as Record<string, string>;

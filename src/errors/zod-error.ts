@@ -1,17 +1,6 @@
 import status from "http-status";
 import * as z from "zod";
-
-export interface ErrorSourceType {
-  path: string;
-  message: string;
-}
-
-export interface ErrorResponseType {
-  statusCode: number;
-  message: string;
-  errorSources: ErrorSourceType[];
-  stack?: string;
-}
+import { ErrorResponseType, ErrorSourceType } from "../interfaces/error.js";
 
 export const handleZodError = (err: z.ZodError): ErrorResponseType => {
   const statusCode: number = status.BAD_REQUEST;

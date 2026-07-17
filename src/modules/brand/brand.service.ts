@@ -17,7 +17,7 @@ const addNewBrand = async (payload: CreateBrand): Promise<Brand> => {
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to add new brand", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -45,7 +45,7 @@ const getBrands = async (query: IQueryParams): Promise<QueryResult<Brand>> => {
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to get brands", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -61,9 +61,7 @@ const getBrandById = async (id: string): Promise<Brand> => {
 
     return brand;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get brand", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -87,9 +85,7 @@ const updateBrandById = async (
 
     return result;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to update brand", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -110,9 +106,7 @@ const deleteBrandById = async (id: string): Promise<void> => {
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to delete brand", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 

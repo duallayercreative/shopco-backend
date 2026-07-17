@@ -29,9 +29,7 @@ const registerUser = async (payload: RegisterUser): Promise<UserResponse> => {
 
     return userResponse(result.user as User);
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to register user", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -57,7 +55,7 @@ const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
       });
     }
   } catch (error) {
-    throw new AppError("Failed to verify email", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -98,9 +96,7 @@ const loginUser = async (
       user: userResponse(result.user as User),
     };
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to login user", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -122,11 +118,8 @@ const googleLoginSuccess = async (
       session: session.session,
       user: session.user as User,
     };
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to google login",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw error;
   }
 };
 
