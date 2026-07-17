@@ -11,7 +11,7 @@ import {
   QueryResult,
 } from "../../interfaces/query-builder.interface.js";
 
-const addProduct = async (payload: CreateProduct): Promise<Product> => {
+const addProduct = async (payload: CreateProduct): Promise<any> => {
   try {
     if (
       payload.discountPercentage &&
@@ -23,7 +23,7 @@ const addProduct = async (payload: CreateProduct): Promise<Product> => {
       );
     }
 
-    const slug = await generateUniqueSlug(payload.title);
+    const slug = generateUniqueSlug(payload.title);
 
     const result = await prisma.$transaction(async (tx) => {
       const product = await tx.product.create({
@@ -62,11 +62,22 @@ const addProduct = async (payload: CreateProduct): Promise<Product> => {
       return product;
     });
 
-    return result;
-  } catch (error) {
-    if (error instanceof AppError) throw error;
+    const updatedProduct = await prisma.product.findUnique({
+      where: { id: result.id, deletedAt: null },
+      include: {
+        _count: true,
+        productColors: {
+          include: {
+            _count: true,
+            productVariants: true,
+          },
+        },
+      },
+    });
 
-    throw new AppError("Failed to add product", status.INTERNAL_SERVER_ERROR);
+    return updatedProduct;
+  } catch (error) {
+    throw error;
   }
 };
 

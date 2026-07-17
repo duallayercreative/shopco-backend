@@ -1,22 +1,16 @@
+import { randomBytes } from "crypto";
 import slugify from "slugify";
-import { prisma } from "../lib/prisma.js";
 
-export const generateUniqueSlug = async (title: string) => {
+// Premium Oversized T-Shirt => a1b2c3-premium-oversized-t-shirt
+export const generateUniqueSlug = (title: string) => {
   const baseSlug = slugify(title, {
     lower: true,
     strict: true,
   });
 
-  let slug = baseSlug;
-  let counter = 1;
+  const suffix = () => randomBytes(3).toString("hex");
 
-  while (
-    await prisma.product.findUnique({
-      where: { slug },
-    })
-  ) {
-    slug = `${baseSlug}-${counter++}`;
-  }
+  let slug = `${baseSlug}-${suffix()}`;
 
   return slug;
 };

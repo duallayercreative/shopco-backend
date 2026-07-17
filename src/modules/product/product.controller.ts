@@ -12,7 +12,7 @@ const addProduct = catchAsync(async (req: Request, res: Response) => {
     ...req.body,
     colors: req.body.colors.map((color: any) => ({
       ...color,
-      imageUrl: files[color.imageIndex].path,
+      imageUrl: files[color.imageIndex]?.path,
     })),
   };
 

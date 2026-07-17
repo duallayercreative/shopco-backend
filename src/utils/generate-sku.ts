@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import { randomBytes } from "crypto";
 
 export const generateSku = (
   title: string,
@@ -18,11 +18,8 @@ export const generateSku = (
     .substring(0, 3)
     .toUpperCase();
 
-  const random = crypto
-    .randomUUID()
-    .replace(/-/g, "")
-    .substring(0, 4)
-    .toUpperCase();
+  const random = () => randomBytes(3).toString("hex").toUpperCase();
 
-  return `${productCode}-${colorCode}-${size.toUpperCase()}-${random}`;
+  // POTSH-BLU-SM-A1B2C3
+  return `${productCode}-${colorCode}-${size.toUpperCase()}-${random()}`;
 };
