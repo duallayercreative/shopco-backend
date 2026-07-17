@@ -17,10 +17,7 @@ const createCategory = async (payload: CreateCategory): Promise<Category> => {
 
     return result;
   } catch (error) {
-    throw new AppError(
-      "Failed to create category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
@@ -50,17 +47,14 @@ const getCategories = async (
 
     return result;
   } catch (error) {
-    throw new AppError(
-      "Failed to fetch categories",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
 const getCategoryById = async (id: string): Promise<Category> => {
   try {
     const result = await prisma.category.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!result) {
@@ -69,12 +63,7 @@ const getCategoryById = async (id: string): Promise<Category> => {
 
     return result;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to fetch category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
@@ -84,7 +73,7 @@ const updateCategoryById = async (
 ): Promise<Category> => {
   try {
     const isCategoryExist = await prisma.category.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!isCategoryExist) {
@@ -98,19 +87,14 @@ const updateCategoryById = async (
 
     return result;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to update category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
 const deleteCategoryById = async (id: string): Promise<void> => {
   try {
     const isCategoryExist = await prisma.category.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!isCategoryExist) {
@@ -118,18 +102,13 @@ const deleteCategoryById = async (id: string): Promise<void> => {
     }
 
     await prisma.category.update({
-      where: { id },
+      where: { id, deletedAt: null },
       data: {
         deletedAt: new Date(),
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to delete category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
