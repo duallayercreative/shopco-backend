@@ -2,11 +2,7 @@ import { Router } from "express";
 import { userController } from "./user.controller.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
-import {
-  paramsIdZodSchema,
-  validateRequestBody,
-  validateRequestParams,
-} from "../../middlewares/zod-middleware.js";
+import { validateRequestBody } from "../../middlewares/zod-middleware.js";
 import { multerUpload } from "../../config/multer.config.js";
 import { userValidation } from "./user.validation.js";
 
@@ -25,7 +21,6 @@ router.patch(
 router.delete(
   "/:id",
   authMiddleware(UserRole.ADMIN),
-  validateRequestParams(paramsIdZodSchema),
   userController.deleteUserById,
 );
 

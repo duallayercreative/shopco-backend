@@ -64,7 +64,7 @@ const updateProfile = async (
 const deleteUserById = async (id: string): Promise<void> => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!user) {
@@ -72,15 +72,13 @@ const deleteUserById = async (id: string): Promise<void> => {
     }
 
     await prisma.user.update({
-      where: { id },
+      where: { id, deletedAt: null },
       data: {
         deletedAt: new Date(),
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to delete user", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
