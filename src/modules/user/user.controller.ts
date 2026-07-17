@@ -18,8 +18,12 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as User;
+  const payload = {
+    ...req.body,
+    image: req.file?.path,
+  };
 
-  const result = await userService.updateProfile(user.id);
+  const result = await userService.updateProfile(user.id, payload);
 
   sendResponse(res, {
     statusCode: 200,
