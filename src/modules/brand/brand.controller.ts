@@ -6,7 +6,12 @@ import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 import status from "http-status";
 
 const addNewBrand = catchAsync(async (req: Request, res: Response) => {
-  const result = await brandService.addNewBrand(req.body);
+  const payload = {
+    ...req.body,
+    logo: req.file?.path,
+  };
+
+  const result = await brandService.addNewBrand(payload);
 
   sendResponse(res, {
     statusCode: status.CREATED,
@@ -42,8 +47,12 @@ const getBrandById = catchAsync(async (req: Request, res: Response) => {
 
 const updateBrandById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
+  const payload = {
+    ...req.body,
+    logo: req.file?.path,
+  };
 
-  const result = await brandService.updateBrandById(id as string, req.body);
+  const result = await brandService.updateBrandById(id as string, payload);
 
   sendResponse(res, {
     statusCode: status.OK,

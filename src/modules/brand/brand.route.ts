@@ -8,12 +8,14 @@ import {
 import { brandValidation } from "./brand.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
+import { multerUpload } from "../../config/multer.config.js";
 
 const router = Router();
 
 router.post(
   "/",
   authMiddleware(UserRole.ADMIN),
+  multerUpload.single("file"),
   validateRequestBody(brandValidation.createBrand),
   brandController.addNewBrand,
 );
@@ -29,6 +31,7 @@ router.get(
 router.patch(
   "/:id",
   authMiddleware(UserRole.ADMIN),
+  multerUpload.single("file"),
   validateRequestParams(paramsIdZodSchema),
   brandController.updateBrandById,
 );

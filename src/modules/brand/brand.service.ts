@@ -52,7 +52,7 @@ const getBrands = async (query: IQueryParams): Promise<QueryResult<Brand>> => {
 const getBrandById = async (id: string): Promise<Brand> => {
   try {
     const brand = await prisma.brand.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!brand) {
@@ -71,7 +71,7 @@ const updateBrandById = async (
 ): Promise<Brand> => {
   try {
     const brand = await prisma.brand.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!brand) {
@@ -92,7 +92,7 @@ const updateBrandById = async (
 const deleteBrandById = async (id: string): Promise<void> => {
   try {
     const brand = await prisma.brand.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!brand) {
