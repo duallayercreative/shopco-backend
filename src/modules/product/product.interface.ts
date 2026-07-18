@@ -17,6 +17,8 @@ export interface CreateProduct {
   }[];
 }
 
+export interface UpdateProduct extends Partial<CreateProduct> {}
+
 /**
  * {
   "title": "Premium Oversized T-Shirt",

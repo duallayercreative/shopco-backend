@@ -1,6 +1,6 @@
 import status from "http-status";
 import AppError from "../../errors/app-error.js";
-import { CreateProduct } from "./product.interface.js";
+import { CreateProduct, UpdateProduct } from "./product.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Prisma, Product } from "@prisma/client";
 import { generateUniqueSlug } from "../../utils/generate-slug.js";
@@ -11,7 +11,7 @@ import {
   QueryResult,
 } from "../../interfaces/query-builder.interface.js";
 
-const addProduct = async (payload: CreateProduct): Promise<any> => {
+const addProduct = async (payload: CreateProduct): Promise<Product> => {
   try {
     if (
       payload.discountPercentage &&
@@ -74,6 +74,10 @@ const addProduct = async (payload: CreateProduct): Promise<any> => {
         },
       },
     });
+
+    if (!updatedProduct) {
+      throw new AppError("Product not found", status.NOT_FOUND);
+    }
 
     return updatedProduct;
   } catch (error) {
@@ -142,20 +146,110 @@ const getProductById = async (id: string): Promise<Product> => {
   }
 };
 
-const updateProductById = async (id: string) => {
+const updateProductById = async (
+  id: string,
+  payload: UpdateProduct,
+): Promise<Product> => {
   try {
+    if (
+      payload.discountPercentage &&
+      (payload.discountPercentage < 0 || payload.discountPercentage > 100)
+    ) {
+      throw new AppError(
+        "Discount percentage must be between 0 and 100",
+        status.BAD_REQUEST,
+      );
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { id, deletedAt: null },
+    });
+
+    if (!product) {
+      throw new AppError("Product not found", status.NOT_FOUND);
+    }
+
+    const slug = payload.title
+      ? generateUniqueSlug(payload.title)
+      : product.slug;
+
+    await prisma.$transaction(async (tx) => {
+      await tx.product.update({
+        where: { id },
+        data: {
+          ...(payload.title && { title: payload.title }),
+          ...(payload.description && {
+            description: payload.description,
+          }),
+          ...(payload.discountPercentage !== undefined && {
+            discountPercentage: payload.discountPercentage,
+          }),
+          ...(payload.brandId && { brandId: payload.brandId }),
+          ...(payload.categoryId && {
+            categoryId: payload.categoryId,
+          }),
+          slug,
+        },
+      });
+
+      if (payload.colors) {
+        await tx.productColor.deleteMany({
+          where: {
+            productId: id,
+          },
+        });
+
+        for (const color of payload.colors) {
+          const createdColor = await tx.productColor.create({
+            data: {
+              color: color.color,
+              imageUrl: color.imageUrl,
+              productId: id,
+            },
+          });
+
+          for (const variant of color.variants) {
+            await tx.productVariant.create({
+              data: {
+                sku: generateSku(product.title, color.color, variant.size),
+                size: variant.size,
+                price: variant.price,
+                stock: variant.stock,
+                colorId: createdColor.id,
+              },
+            });
+          }
+        }
+      }
+    });
+
+    const result = await prisma.product.findUnique({
+      where: { id: product.id, deletedAt: null },
+      include: {
+        _count: true,
+        productColors: {
+          include: {
+            _count: true,
+            productVariants: true,
+          },
+        },
+      },
+    });
+
+    if (!result) {
+      throw new AppError("Product not found", status.NOT_FOUND);
+    }
+
+    return result;
   } catch (error) {
-    throw new AppError(
-      "Failed to update product",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
 const deleteProductById = async (id: string): Promise<void> => {
   try {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!product) {
@@ -163,18 +257,13 @@ const deleteProductById = async (id: string): Promise<void> => {
     }
 
     await prisma.product.update({
-      where: { id },
+      where: { id, deletedAt: null },
       data: {
         deletedAt: new Date(),
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to delete product",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 

@@ -31,7 +31,9 @@ router.get(
 router.patch(
   "/:id",
   authMiddleware(UserRole.ADMIN),
+  multerUpload.array("images"),
   validateRequestParams(paramsIdZodSchema),
+  validateRequestBody(productValidation.updateProduct),
   productController.updateProductById,
 );
 

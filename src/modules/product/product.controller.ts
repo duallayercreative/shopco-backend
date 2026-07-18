@@ -50,7 +50,27 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateProductById = catchAsync(async (req: Request, res: Response) => {});
+const updateProductById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const files = req.files as Express.Multer.File[];
+
+  const payload = {
+    ...req.body,
+    colors: req.body?.colors?.map((color: any) => ({
+      ...color,
+      imageUrl: files[color.imageIndex]?.path,
+    })),
+  };
+
+  const result = await productService.updateProductById(id as string, payload);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Product updated successfully",
+    data: result,
+  });
+});
 
 const deleteProductById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

@@ -23,10 +23,8 @@ const createProductColor = z.object({
     .min(1, "Color is required")
     .max(50, "Color can't be more than 50 characters"),
 
-  // Image URL will be added by the backend after Cloudinary upload
   imageUrl: z.url().optional(),
 
-  // Temporary field to map uploaded files
   imageIndex: z.number().int().min(0).optional(),
 
   variants: z
