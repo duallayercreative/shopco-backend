@@ -9,13 +9,13 @@ import {
   QueryResult,
 } from "../../interfaces/query-builder.interface.js";
 
-const addToCart = async (payload: AddToCart, userId: string): Promise<Cart> => {
+const addToCart = async (userId: string, payload: AddToCart): Promise<Cart> => {
   try {
     const result = await prisma.cart.upsert({
       where: {
-        userId_productId: {
+        userId_variantId: {
           userId,
-          productId: payload.productId,
+          variantId: payload.variantId,
         },
       },
       update: {
@@ -26,13 +26,13 @@ const addToCart = async (payload: AddToCart, userId: string): Promise<Cart> => {
       create: {
         userId,
         quantity: payload.quantity,
-        productId: payload.productId,
+        variantId: payload.variantId,
       },
     });
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to add to cart", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 

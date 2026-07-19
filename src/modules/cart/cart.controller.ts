@@ -9,7 +9,7 @@ import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 const addToCart = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as User;
 
-  const result = await cartService.addToCart(req.body, user.id);
+  const result = await cartService.addToCart(user.id, req.body);
 
   sendResponse(res, {
     statusCode: status.CREATED,
