@@ -1,5 +1,3 @@
-import status from "http-status";
-import AppError from "../../errors/app-error.js";
 import { AddToCart } from "./cart.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Cart, Prisma } from "@prisma/client";
@@ -73,7 +71,26 @@ const getCarts = async (
   }
 };
 
+const deleteFromCart = async (
+  userId: string,
+  variantId: string,
+): Promise<void> => {
+  try {
+    await prisma.cart.delete({
+      where: {
+        userId_variantId: {
+          userId,
+          variantId,
+        },
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const cartService = {
   addToCart,
   getCarts,
+  deleteFromCart,
 };

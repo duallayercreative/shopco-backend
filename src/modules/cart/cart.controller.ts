@@ -32,7 +32,22 @@ const getCarts = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteFromCart = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const user = req.user as User;
+
+  const result = await cartService.deleteFromCart(user.id, id as string);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Product deleted from cart successfully",
+    data: result,
+  });
+});
+
 export const cartController = {
   addToCart,
   getCarts,
+  deleteFromCart,
 };
