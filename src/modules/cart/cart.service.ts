@@ -52,12 +52,24 @@ const getCarts = async (
         userId,
         deletedAt: null,
       })
-      .includes({})
+      .includes({
+        variant: {
+          include: {
+            _count: true,
+            color: {
+              include: {
+                _count: true,
+                product: true,
+              },
+            },
+          },
+        },
+      })
       .execute();
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to get cart", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 

@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 const addToCart = z.object({
-  brandId: z.uuid("Invalid brand ID"),
+  variantId: z.uuid("Invalid brand ID"),
   quantity: z
     .number({
       error: "Quantity must be a number",
